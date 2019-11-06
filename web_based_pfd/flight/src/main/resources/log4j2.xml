@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="INFO">
+    <Properties>
+        <!-- 日志存放的目录 -->
+        <Property name="LOG_HOME" value="./log"/>
+        <!-- 模块名称， 影响日志配置名，日志文件名，根据自己项目进行配置 -->
+        <Property name="LOG_MODULE_NAME" value="flight"/>
+    </Properties>
+
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %m%n"/>
+        </Console>
+
+        <!-- 这个会打印出所有的info级别以上的日志，日志会自动存入按年月日建立的文件夹下面并进行压缩，作为存档-->
+        <RollingRandomAccessFile name="RollingRandomAccessFileInfo"
+                                 fileName="${LOG_HOME}/${LOG_MODULE_NAME}-info.log"
+                                 filePattern="${LOG_HOME}/${LOG_MODULE_NAME}-info-%d{yyyy-MM-dd}.log">
+            <Filters>
+                <!--如果是info\warn输出-->
+                <ThresholdFilter level="INFO" onMatch="ACCEPT" onMismatch="DENY"/>
+            </Filters>
+            <PatternLayout pattern="%d [%t] %-5level %logger{0} - %msg%n"/>
+            <Policies>
+                <!--interval属性用来指定多久滚动一次，当前设置是1天滚动一次-->
+                <TimeBasedTriggeringPolicy interval="1"/>
+            </Policies>
+        </RollingRandomAccessFile>
+    </Appenders>
+
+    <Loggers>
+        <Root level="info">
+            <Appender-Ref ref="Console"/>
+            <!--<Appender-Ref ref="RollingRandomAccessFileInfo"/>-->
+        </Root>
+    </Loggers>
+</Configuration>
